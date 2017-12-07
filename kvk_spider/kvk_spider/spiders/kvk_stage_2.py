@@ -116,6 +116,7 @@ class KvkStage2Spider(scrapy.Spider):
                 print("This company's location do not have a house number. ")
 
             try:
+                item['housenumber_extension'] = "No extension"
                 item['housenumber_extension'] = str(company_obj['huisnummertoevoeging'])
             except Exception as e:
                 print("This company's house number do not have an extension. ")
