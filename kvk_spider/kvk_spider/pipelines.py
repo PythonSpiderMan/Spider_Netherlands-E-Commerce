@@ -48,16 +48,7 @@ class kvkItemModel(BaseModel):
 final_db.close()
 
 
-items = []
-
-
 class KvkSpiderPipeline(object):
-    def close_spider(self, spider):
-        global items
-        for item in items:
-            item.save()
-        print("items saved! ")
-
     def open_spider(self, spider):
         if spider.name == "kvk_stage_1":
             print('This is stage 1 spider')
@@ -91,18 +82,9 @@ class KvkSpiderPipeline(object):
             kvk_item.post_code = item['post_code']
 
             try:
-                global items
-                items.append(kvk_item)
+                kvk_item.save()
                 logging.info("This is a valid record. ")
-
-                if len(items) >= 100:
-                    for item in items:
-                        print("Performing IO Operations. ")
-                        item.save()
-                    items = []
-                else:
-                    pass
-
+                
             except Exception as e:
                 logging.error(e)
                 logging.info("duplicate record in first stage spider. ")
@@ -148,17 +130,8 @@ class KvkSpiderPipeline(object):
             final_item.website = item['website']
 
             try:
-                global items
-                items.append(final_item)
+                final_item.save()
                 logging.info("This is a valid record. ")
-
-                if len(items) >= 100:
-                    for item in items:
-                        print("Performing IO Operations. ")
-                        item.save()
-                    items = []
-                else:
-                    pass
 
             except Exception as e:
                 logging.error(e)
